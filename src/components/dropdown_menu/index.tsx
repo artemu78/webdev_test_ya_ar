@@ -1,41 +1,56 @@
-import { useRef, useLayoutEffect } from "react";
-import styles from './styles.module.css'
+import { useRef, useEffect, ReactElement, useState } from "react";
+import styles from "./styles.module.css";
 
 type Props = {
-  open: boolean;
-  setMenuOpen: (T: boolean) => void;
   menuItems: DropdownItem[];
+  children: ReactElement;
 };
 
-const Dropdownmenu = ({ open, setMenuOpen, menuItems }: Props) => {
+const Dropdownmenu = ({ menuItems, children }: Props) => {
+  const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  console.log(open, "open");
-  useLayoutEffect(() => {
-    function handleClickOutside(event: any): void {
-      event.stopPropagation();
-      event.preventDefault();
-      console.log(event.target, 'event.target handleClickOutside');
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+  const listContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent): any {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains((event.target as Element).parentElement)
+      ) {
         setMenuOpen(false);
-        // debugger;
       }
     }
 
     // Bind the event listener
-    document.body.addEventListener("mousedown", handleClickOutside);
-    
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       // Unbind the event listener on clean up
-      document.body.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [wrapperRef]);
 
-  if (!open) return null;
-  
   return (
-    <div ref={wrapperRef} className={styles.menu}>
-      {menuItems.map((item: DropdownItem, index) => {return (<div className={styles.menuItem} key={index+item.label}>{item.label}</div>)})}
+    <div
+      onClick={(event: React.MouseEvent<HTMLElement>) => {
+        if (!listContainerRef.current?.contains((event.target as Element).parentElement)) {
+          setMenuOpen((state) => !state);
+        }
+      }}
+      ref={wrapperRef}
+    >
+      {children}
+      {isMenuOpen && (
+        <div ref={listContainerRef} className={styles.menu}>
+          {menuItems.map((item: DropdownItem, index) => {
+            return (
+              <div className={styles.menuItem} key={index + item.label}>
+                {item.label}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
@@ -45,4 +60,4 @@ export type DropdownItem = {
   label: string;
   icon?: string;
   value?: string;
-}
+};
