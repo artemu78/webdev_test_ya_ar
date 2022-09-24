@@ -1,3 +1,4 @@
+import { MouseEvent } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import Dropdownmenu, { DropdownItem } from "./components/dropdown_menu";
@@ -12,14 +13,21 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Dropdownmenu
-          menuItems={menuItems}
-        >
-          <p>
+        <Dropdownmenu menuItems={menuItems}>
+          <button>
             Click <code>ME</code> to see dropdown.
-          </p>
+          </button>
         </Dropdownmenu>
       </header>
+      <footer className="App-footer">
+        <span
+          onMouseEnter={(event: MouseEvent) => {
+            (event.target as HTMLElement).title = event.clientX + '/' + event.clientY;
+          }}
+        >
+          Все права уважены
+        </span>
+      </footer>
     </div>
   );
 }
