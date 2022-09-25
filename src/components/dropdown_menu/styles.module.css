@@ -1,5 +1,6 @@
 .container {
   position: relative;
+  /* display: inline; */
 }
 
 .menu {
@@ -7,6 +8,11 @@
   border: 1px solid gray;
   border-radius: 3px;
   padding: 4px;
+  list-style-type: none;
+  margin: 0;
+  white-space: nowrap;
+  max-width: 260px;
+  overflow-y: clip;
 }
 
 .menuItem {

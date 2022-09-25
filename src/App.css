@@ -21,14 +21,28 @@
 
 .App-header {
   display: flex;
-  /* justify-content: center; */
+  justify-content: space-between;
   flex-direction: column;
+  /* align-items: flex-end; */
   /* align-items: center; */
   flex-grow: 1;
+  padding: 50px;
 }
 
-.App-footer {
-  padding: 10px;
+.App-header .Top-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.App-header .Centered-line {
+  display: flex;
+  justify-content: center;
+}
+
+.App-header .btn {
+  border: none;
+  font-size: large;
+  padding: 5px;
 }
 
 @keyframes App-logo-spin {
