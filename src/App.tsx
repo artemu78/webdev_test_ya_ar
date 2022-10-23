@@ -1,7 +1,6 @@
-import { MouseEvent } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import Dropdownmenu from "./components/dropdown_menu";
+import Logo from "./components/logo";
 import { menuItems, menuItems2 } from "const";
 
 function App() {
@@ -21,7 +20,7 @@ function App() {
           </Dropdownmenu>
         </div>
         <div className="Centered-line">
-          <img src={logo} className="App-logo" alt="logo" />
+          <Logo />
         </div>
         <div className="Top-line">
           <Dropdownmenu menuItems={menuItems}>
