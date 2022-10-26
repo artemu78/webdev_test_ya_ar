@@ -1,15 +1,23 @@
-import { MouseEvent } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import Dropdownmenu from "./components/dropdown_menu";
+import Dropdownmenu, { DropdownItem } from "./components/dropdown_menu";
 import { menuItems, menuItems2 } from "const";
 
 function App() {
+  const menu1 = menuItems.map((item) => {
+    return {
+      ...item,
+      callback: (item: DropdownItem) => {
+        alert(item.label);
+      },
+    };
+  });
+
   return (
     <div className="App">
       <main className="App-header">
         <div className="Top-line">
-          <Dropdownmenu menuItems={menuItems}>
+          <Dropdownmenu menuItems={menu1}>
             <button className="btn">
               Click <code>ME</code> to see dropdown
             </button>
@@ -21,7 +29,7 @@ function App() {
           </Dropdownmenu>
         </div>
         <div className="Centered-line">
-          <img src={logo} className="App-logo" alt="logo" />
+          <Logo />
         </div>
         <div className="Top-line">
           <Dropdownmenu menuItems={menuItems}>
@@ -38,6 +46,10 @@ function App() {
       </main>
     </div>
   );
+}
+
+const Logo = () => {
+  return <img src={logo} className="App-logo" alt="logo" />
 }
 
 export default App;

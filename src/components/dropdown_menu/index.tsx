@@ -1,5 +1,5 @@
 import { useRef, useEffect, ReactElement, useState } from "react";
-import * as CSS from 'csstype';
+import * as CSS from "csstype";
 import styles from "./styles.module.css";
 import { getWindowSize, WindowSize } from "utils/windowclient";
 // import cn from "classnames";
@@ -13,6 +13,7 @@ export type DropdownItem = {
   label: string;
   icon?: string;
   value?: string;
+  callback?: (item: DropdownItem) => void;
 };
 
 type Props = {
@@ -36,20 +37,21 @@ const Dropdownmenu = ({ menuItems, children }: Props) => {
   const [positionRight, setPoitionRight] = useState<number>(0);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const listMenuRef = useRef<HTMLDivElement>(null);
+  const listMenuRef = useRef<HTMLUListElement>(null);
 
   const toggleDropdown = (event: React.MouseEvent<HTMLElement>) => {
     const targetCoords = (event.target as HTMLElement).getBoundingClientRect();
     const windowSize = getWindowSize();
-    
+
     const { isRight, isTop } = positionCheck(targetCoords, windowSize);
-    console.log({ coords: targetCoords, windowSize, isRight, isTop });
 
     setPositionIsTop(isTop);
     isRight && setPoitionRight(targetCoords.right);
-    
+
     // do not trigger menu withing menu itself
-    if (!listMenuRef.current?.contains((event.target as Element).parentElement)) {
+    if (
+      !listMenuRef.current?.contains((event.target as Element).parentElement)
+    ) {
       setMenuOpen((state) => !state);
       if (listMenuRef.current && isTop) setPositionIsTop(true);
     }
@@ -74,27 +76,37 @@ const Dropdownmenu = ({ menuItems, children }: Props) => {
     };
   }, [wrapperRef]);
 
-  let dropdownMenuStyle: CSS.Properties<string | number>= {};
+  let dropdownMenuStyle: CSS.Properties<string | number> = {};
   if (positionIsTop) dropdownMenuStyle.bottom = "100%";
   if (positionRight) dropdownMenuStyle.right = 0;
+
+  const handleItemClick = (item: DropdownItem) => {
+    return () => {
+      if (item.callback) {
+        setMenuOpen(false);
+        item.callback(item);
+      }
+    };
+  };
 
   return (
     <div onClick={toggleDropdown} ref={wrapperRef} className={styles.container}>
       {children}
       {isMenuOpen && (
-        <div
-          ref={listMenuRef}
-          className={styles.menu}
-          style = {dropdownMenuStyle}
-        >
+        <ul ref={listMenuRef} className={styles.menu} style={dropdownMenuStyle}>
           {menuItems.map((item: DropdownItem, index) => {
             return (
-              <div className={styles.menuItem} key={index + item.label} title={item.label}>
+              <li
+                className={styles.menuItem}
+                key={index + item.label}
+                title={item.label}
+                onClick={handleItemClick(item)}
+              >
                 {item.label}
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );
