@@ -1,8 +1,7 @@
-import { useRef, useEffect, ReactElement, useState } from "react";
+import { useRef, useEffect, ReactElement, useState, useCallback } from "react";
 import * as CSS from "csstype";
 import styles from "./styles.module.css";
 import { getWindowSize, WindowSize } from "utils/windowclient";
-// import cn from "classnames";
 
 type BlockPosition = {
   isTop: boolean;
@@ -39,20 +38,24 @@ const Dropdownmenu = ({ menuItems, children }: Props) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const listMenuRef = useRef<HTMLUListElement>(null);
 
-
-  const scrollListener = (elem: HTMLElement): (event: Event) => any => (event: Event) => {
-    const box = elem.getBoundingClientRect();
-    const isInViewport = box.top < window.innerHeight && box.bottom >= 0;
-    
-    //hide menu when button is out of viewport
-    setMenuOpen(isInViewport); 
-  }
+  // memoise for removeEventListener
+  const scrollListener = useCallback((event: Event) => {
+    if (wrapperRef?.current) {
+      const elem = wrapperRef.current;
+      const box = elem.getBoundingClientRect();
+      const isInViewport = box.top < window.innerHeight && box.bottom >= 0;
+      //hide menu when button is out of viewport
+      setMenuOpen(isInViewport);
+    }
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen)
-    wrapperRef.current && window.addEventListener("scroll", scrollListener(wrapperRef.current));
+      wrapperRef.current && window.addEventListener("scroll", scrollListener);
     else
-    wrapperRef.current && window.removeEventListener("scroll", scrollListener(wrapperRef.current));
+      wrapperRef.current &&
+        window.removeEventListener("scroll", scrollListener);
+    debugger;
   }, [isMenuOpen]);
 
   const toggleDropdown = (event: React.MouseEvent<HTMLElement>) => {
