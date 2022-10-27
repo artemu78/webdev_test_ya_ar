@@ -35,6 +35,16 @@ function App() {
           </Dropdownmenu>
         </div>
       </main>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
+      <p>lorem ipsum</p>
     </div>
   );
 }
